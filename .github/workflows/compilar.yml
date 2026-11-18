@@ -1,0 +1,36 @@
+
+name: Gerar executavel Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygame pyinstaller
+
+      - name: Gerar executavel
+        run: |
+          pyinstaller --onefile --windowed --name AventuraNaFloresta main.py
+
+      - name: Disponibilizar executavel
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aventura-na-Floresta-Windows
+          path: dist/AventuraNaFloresta.exe
